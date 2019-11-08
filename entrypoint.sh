@@ -202,6 +202,11 @@ UPLOAD_URL="$(echo "${BASE_URL}" | sed -e 's/api/uploads/')"
 for asset in "${ASSETS}"/*; do
   FILE_NAME="$(basename "${asset}")"
 
+  echo "Deleting ${FILE_NAME} ..."
+  curl -sS -X DELETE \
+    -H "Authorization: token ${TOKEN}" \
+    "${UPLOAD_URL}/releases/assets/${FILE_NAME}"
+
   CODE="$(curl -sS  -X POST \
     --write-out "%{http_code}" -o "/tmp/${FILE_NAME}.json" \
     -H "Authorization: token ${TOKEN}" \
