@@ -101,8 +101,12 @@ toJsonOrNull() {
 METHOD="POST"
 URL="${BASE_URL}"
 if [ -n "${RELEASE_ID}" ]; then
-  METHOD="PATCH"
-  URL="${URL}/${RELEASE_ID}"
+  E_RELEASE_URL="${URL}/${RELEASE_ID}"
+  
+  echo "Deleting ${E_RELEASE_URL} ..."
+  curl -sS -X DELETE \
+    -H "Authorization: token ${TOKEN}" \
+    "${E_RELEASE_URL}"
 fi
 
 # Creating the object in a PATCH-friendly way
@@ -201,11 +205,6 @@ UPLOAD_URL="$(echo "${BASE_URL}" | sed -e 's/api/uploads/')"
 
 for asset in "${ASSETS}"/*; do
   FILE_NAME="$(basename "${asset}")"
-
-  echo "Deleting ${FILE_NAME} ..."
-  curl -sS -X DELETE \
-    -H "Authorization: token ${TOKEN}" \
-    "${UPLOAD_URL}/releases/assets/${FILE_NAME}"
 
   CODE="$(curl -sS  -X POST \
     --write-out "%{http_code}" -o "/tmp/${FILE_NAME}.json" \
