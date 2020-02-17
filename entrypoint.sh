@@ -193,6 +193,8 @@ for entry in $(echo "${INPUT_FILES}" | tr ' ' '\n'); do
     fi
 
     # In any other case compress
+    ls -alh
+    pwd
     tar -cf "${ASSETS}/${ASSET_NAME}.tgz"  "${file}"
   done
 done
